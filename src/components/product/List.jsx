@@ -10,6 +10,7 @@ import { fetchCategories, fetchProducts } from "../../api/products";
 import ProductCard from "./Card";
 import ProductSkeleton from "../ProductSkeleton";
 import Filters from "../filters/Filters";
+import Pagination from "./Pagination";
 import { toast } from "react-toastify";
 
 const PAGE_SIZE = 20;
@@ -67,16 +68,19 @@ const filteredProducts = useMemo(() => {
   }, [page]);
 
   return (
-    <div>
-      <Filters
-        categories={categories}
-        categoryFilter={categoryFilter}
-        setCategoryFilter={(slug) => dispatch(setCategoryFilter(slug))}
-        ratingFilter={ratingFilter}
-        setRatingFilter={(val) => dispatch(setRatingFilter(val))}
-        sortOrder={sortOrder}
-        setSortOrder={(order) => dispatch(setSortOrder(order))}
-      />
+    <div className="relative">
+      <div className="flex sticky top-0 shadow-lg flex-col md:flex-row md:items-center gap-4 bg-white z-10">
+        <Filters
+          categories={categories}
+          categoryFilter={categoryFilter}
+          setCategoryFilter={(slug) => dispatch(setCategoryFilter(slug))}
+          ratingFilter={ratingFilter}
+          setRatingFilter={(val) => dispatch(setRatingFilter(val))}
+          sortOrder={sortOrder}
+          setSortOrder={(order) => dispatch(setSortOrder(order))}
+        />
+        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         {loading
@@ -87,18 +91,17 @@ const filteredProducts = useMemo(() => {
                 product={product}
                 isFavorite={favorites.includes(product.id)}
                 onToggleFavorite={() => {
-                  
                   toast.success(
                     favorites.includes(product.id)
                       ? "Removed from favorites"
                       : "Added to favorites",
-                      {
-                        position: "top-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                      }
+                    {
+                      position: "top-right",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                    }
                   );
                   dispatch(toggleFavorite(product.id));
                 }}
@@ -108,28 +111,6 @@ const filteredProducts = useMemo(() => {
 
       {!loading && filteredProducts.length === 0 && (
         <div className="text-center text-gray-500 py-6">No matching products!</div>
-      )}
-
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-4 my-6">
-          <button
-            className="px-4 py-2 border rounded disabled:opacity-50 hover:bg-gray-100"
-            onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-            disabled={page === 1}
-          >
-            Previous
-          </button>
-          <span className="text-gray-600">
-            Page {page} of {totalPages}
-          </span>
-          <button
-            className="px-4 py-2 border rounded disabled:opacity-50 hover:bg-gray-100"
-            onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
-            disabled={page === totalPages}
-          >
-            Next
-          </button>
-        </div>
       )}
     </div>
   );

@@ -13,7 +13,7 @@ export default function FilterBar({
   const toggleDropdown = () => setShowDropdown((prev) => !prev);
 
   return (
-    <div className="sticky shadow-lg top-0 bg-white p-2 z-10 flex gap-2 items-center flex-wrap">
+    <div className="top-0 bg-white p-2 z-10 flex gap-2 items-center flex-wrap">
       <div className="relative" tabIndex={0}>
         <button
           className="border p-2 rounded w-[180px] bg-white text-left"
