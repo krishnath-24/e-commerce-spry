@@ -38,6 +38,18 @@ export default function List() {
     }
   };
 
+const filteredProducts = useMemo(() => {
+    return products
+      .filter((p) => (categoryFilter ? p.category === categoryFilter : true))
+      .filter((p) => (ratingFilter ? p.rating >= ratingFilter : true))
+      .sort((a, b) => (sortOrder === "asc" ? a.price - b.price : b.price - a.price));
+  }, [products, categoryFilter, ratingFilter, sortOrder]);
+
+
+  const isFilterApplied = categoryFilter || ratingFilter || sortOrder;
+  const totalPages = isFilterApplied ? 1 :  Math.ceil(total / PAGE_SIZE);
+
+
   useEffect(() => {
     fetchCategories()
       .then(setCategories)
@@ -53,17 +65,6 @@ export default function List() {
     fetchData(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
-
-const filteredProducts = useMemo(() => {
-    return products
-      .filter((p) => (categoryFilter ? p.category === categoryFilter : true))
-      .filter((p) => (ratingFilter ? p.rating >= ratingFilter : true))
-      .sort((a, b) => (sortOrder === "asc" ? a.price - b.price : b.price - a.price));
-  }, [products, categoryFilter, ratingFilter, sortOrder]);
-
-
-  const isFilterApplied = categoryFilter || ratingFilter || sortOrder;
-  const totalPages = isFilterApplied ? 1 :  Math.ceil(total / PAGE_SIZE);
 
   return (
     <div>
