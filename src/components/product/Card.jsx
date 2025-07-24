@@ -2,7 +2,7 @@ import React from "react";
 import { HeartIcon as HeartFill } from "@heroicons/react/24/solid";
 import { HeartIcon as Heart } from "@heroicons/react/24/outline";
 
-const ProductCard = React.memo(function ProductCard({
+const Card = React.memo(function ProductCard({
   product,
   isFavorite,
   onToggleFavorite,
@@ -14,13 +14,13 @@ const ProductCard = React.memo(function ProductCard({
     >
       <button
         onClick={() => onToggleFavorite(product.id)}
-        className="absolute top-4 right-2"
+        className="absolute top-4 right-2 mx-2"
         aria-label={isFavorite ? "Remove Favorite" : "Add to Favorite"}
       >
         {isFavorite ? (
-          <HeartFill className="w-6 h-6 text-red-500" />
+          <HeartFill className="w-6 h-6 text-red-500 mt-2" />
         ) : (
-          <Heart className="w-6 h-6 text-gray-400" />
+          <Heart className="w-6 h-6 text-gray-400 mt-2" />
         )}
       </button>
       <img
@@ -30,7 +30,7 @@ const ProductCard = React.memo(function ProductCard({
         loading="lazy"
       />
       <div className="flex flex-col gap-2 flex-1 mr-2">
-        <h2 className="text-lg font-semibold">{product.title}</h2>
+        <h2 className="text-lg font-semibold mr-2 flex flex-wrap pr-2 max-w-[200px]">{product.title}</h2>
         <p>${product.price}</p>
         <p>{product.category}</p>
         <p>⭐ {product.rating}</p>
@@ -40,4 +40,4 @@ const ProductCard = React.memo(function ProductCard({
 });
 
 
-export default ProductCard;
+export default Card;

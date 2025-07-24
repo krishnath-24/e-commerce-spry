@@ -5,15 +5,16 @@ import {
   setCategoryFilter,
   setRatingFilter,
   setSortOrder,
-} from "../redux/productsSlice";
-import { fetchCategories, fetchProducts } from "../api/products";
-import ProductCard from "./ProductCard";
-import ProductSkeleton from "./ProductSkeleton";
-import Filters from "./Filters";
+} from "../../redux/productsSlice";
+import { fetchCategories, fetchProducts } from "../../api/products";
+import ProductCard from "./Card";
+import ProductSkeleton from "../ProductSkeleton";
+import Filters from "../filters/Filters";
+import { toast } from "react-toastify";
 
 const PAGE_SIZE = 20;
 
-export default function ProductList() {
+export default function List() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -61,7 +62,8 @@ const filteredProducts = useMemo(() => {
   }, [products, categoryFilter, ratingFilter, sortOrder]);
 
 
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const isFilterApplied = categoryFilter || ratingFilter || sortOrder;
+  const totalPages = isFilterApplied ? 1 :  Math.ceil(total / PAGE_SIZE);
 
   return (
     <div>
@@ -83,7 +85,22 @@ const filteredProducts = useMemo(() => {
                 key={product.id}
                 product={product}
                 isFavorite={favorites.includes(product.id)}
-                onToggleFavorite={() => dispatch(toggleFavorite(product.id))}
+                onToggleFavorite={() => {
+                  
+                  toast.success(
+                    favorites.includes(product.id)
+                      ? "Removed from favorites"
+                      : "Added to favorites",
+                      {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                      }
+                  );
+                  dispatch(toggleFavorite(product.id));
+                }}
               />
             ))}
       </div>
@@ -95,7 +112,7 @@ const filteredProducts = useMemo(() => {
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-4 my-6">
           <button
-            className="px-4 py-2 border rounded disabled:opacity-50"
+            className="px-4 py-2 border rounded disabled:opacity-50 hover:bg-gray-100"
             onClick={() => setPage((prev) => Math.max(1, prev - 1))}
             disabled={page === 1}
           >
@@ -105,7 +122,7 @@ const filteredProducts = useMemo(() => {
             Page {page} of {totalPages}
           </span>
           <button
-            className="px-4 py-2 border rounded disabled:opacity-50"
+            className="px-4 py-2 border rounded disabled:opacity-50 hover:bg-gray-100"
             onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
             disabled={page === totalPages}
           >
