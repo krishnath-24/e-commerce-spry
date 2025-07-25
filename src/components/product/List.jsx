@@ -47,7 +47,7 @@ const filteredProducts = useMemo(() => {
   }, [products, categoryFilter, ratingFilter, sortOrder]);
 
 
-  const isFilterApplied = categoryFilter || ratingFilter || sortOrder;
+  const isFilterApplied = categoryFilter;
   const totalPages = isFilterApplied ? 1 :  Math.ceil(total / PAGE_SIZE);
 
 
